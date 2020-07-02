@@ -2026,7 +2026,6 @@ var validateFileURL;
 
     try {
       var viewerOrigin = new URL(window.location.href).origin || "null";
-
       if (HOSTED_VIEWER_ORIGINS.includes(viewerOrigin)) {
         return;
       }
@@ -2096,7 +2095,7 @@ function webViewerInitialized() {
   file = "file" in params ? params.file : _app_options.AppOptions.get("defaultUrl");
   base = 'base' in params ? params.base : appConfig.defaultUrl;
   disableDownload = 'disabledownload' in params ? params.disabledownload : 'false';
-  validateFileURL(file, base);
+  file = validateFileURL(file, base) || file;
   var fileInput = document.createElement("input");
   fileInput.id = appConfig.openFileInputName;
   fileInput.className = "fileInput";
@@ -16180,4 +16179,4 @@ _app.PDFPrintServiceFactory.instance = {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=viewer.js.map
+////# sourceMappingURL=viewer.js.map

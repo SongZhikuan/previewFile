@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
         }
-        html, body {
+        html {
             height: 100%;
             width: 100%;
         }
@@ -20,6 +20,16 @@
 <script src="js/jquery-3.0.0.min.js" type="text/javascript"></script>
 <script src="js/watermark.js" type="text/javascript"></script>
 <script>
+    var dHeight = document.documentElement.clientHeight;
+    /**
+     * 监听滚动 并向上级页面发送事件
+     */
+    window.onscroll = function (e) {
+        var body = document.body;
+        if (body.offsetHeight - dHeight - document.documentElement.scrollTop <= 30) {
+            window.parent.postMessage('ended|' + document.documentElement.scrollTop + '|' + body.offsetHeight, '*');
+        }
+    }
     /*初始化水印*/
     window.onload = function() {
         var watermarkTxt = '${watermarkTxt}';

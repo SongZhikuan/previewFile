@@ -20,7 +20,19 @@
 </body>
 <script src="js/watermark.js" type="text/javascript"></script>
 <script type="text/javascript">
-    document.getElementsByTagName('iframe')[0].height = document.documentElement.clientHeight-10;
+    var dHeight = document.documentElement.clientHeight-10;
+    document.getElementsByTagName('iframe')[0].height = dHeight;
+
+    /**
+     * 监听滚动 并向上级页面发送事件
+     */
+    document.getElementsByTagName('iframe')[0].contentWindow.onscroll = function (e) {
+        var body = document.getElementsByTagName('iframe')[0].contentWindow.document.body;
+        // console.log(body.offsetHeight - body.scrollTop);
+        if (body.offsetHeight - dHeight - body.scrollTop <= 30) {
+            window.parent.postMessage('ended|' + body.scrollTop + '|' + body.offsetHeight, '*');
+        }
+    }
     /**
      * 页面变化调整高度
      */
