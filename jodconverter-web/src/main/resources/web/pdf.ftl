@@ -29,11 +29,22 @@
 </body>
 <script src="js/watermark.js" type="text/javascript"></script>
 <script type="text/javascript">
+    var _self = this;
     document.getElementsByTagName('iframe')[0].src = "${baseUrl}pdfjs/web/viewer.html?base=${baseUrl}&file="+encodeURIComponent('${finalUrl}')+"&disabledownload=${pdfDownloadDisable}";
-    console.log(document.getElementsByTagName('iframe')[0].src);
     document.getElementsByTagName('iframe')[0].height = document.documentElement.clientHeight-10;
     hiddenImageHandleButton();
-
+    var timer = setInterval(function () {
+        if (frames[0].PDFViewerApplication && frames[0].PDFViewerApplication.pdfViewer) {
+            clearInterval(timer);
+            var arr = location.search.split('setToolBarNumber|');
+            var t = setTimeout(function () {
+                clearTimeout(t);
+                if (arr[1]) {
+                    _self.setToolbarPageNumber(Number(arr[1] || 1));
+                }
+            }, 1000);
+        }
+    }, 100);
     /**
      * 监听toolbar page change
      */
@@ -58,19 +69,16 @@
      */
     window.addEventListener('message', function (e) {
         const data = e.data.split('|');
+        console.log('pdf: ', data);
         if (data[0] === 'setToolBarNumber') {
             setToolbarPageNumber(Number(data[1]) || 1);
         }
-        // console.log(e.data)  //e.data为传递过来的数据
-        // console.log(e.origin)  //e.origin为调用 postMessage 时消息发送方窗口的 origin（域名、协议和端口）
-        // console.log(e.source)  //e.source为对发送消息的窗口对象的引用，可以使用此来在具有不同origin的两个窗口之间建立双向通信
     })
 
     /**
      * 设置toolbar的页码
      */
     function setToolbarPageNumber(page) {
-        // console.log(frames[0]);
         frames[0].PDFViewerApplication.page = page;
     }
     /**

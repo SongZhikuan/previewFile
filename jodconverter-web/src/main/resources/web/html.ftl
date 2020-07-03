@@ -23,16 +23,36 @@
     var dHeight = document.documentElement.clientHeight-10;
     document.getElementsByTagName('iframe')[0].height = dHeight;
 
+    var body = document.getElementsByTagName('iframe')[0].contentWindow.document.body;
+    var timer = setInterval(function () {
+        if (document.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName('table')[0]) {
+            clearInterval(timer);
+            var arr = location.search.split('setToolBarNumber|');
+            var t = setTimeout(function () {
+                clearTimeout(t);
+                document.getElementsByTagName('iframe')[0].contentWindow.document.body.scrollTop = Number(arr[1] || 0);
+            }, 100);
+        }
+    }, 100);
     /**
      * 监听滚动 并向上级页面发送事件
      */
     document.getElementsByTagName('iframe')[0].contentWindow.onscroll = function (e) {
-        var body = document.getElementsByTagName('iframe')[0].contentWindow.document.body;
         // console.log(body.offsetHeight - body.scrollTop);
         if (body.offsetHeight - dHeight - body.scrollTop <= 30) {
             window.parent.postMessage('ended|' + body.scrollTop + '|' + body.offsetHeight, '*');
         }
     }
+    /**
+     * iframe通信
+     */
+    window.addEventListener('message', function (e) {
+        const data = e.data.split('|');
+        console.log('html: ', data);
+        if (data[0] === 'setToolBarNumber') {
+            body.scrollTop = Number(data[2]);
+        }
+    })
     /**
      * 页面变化调整高度
      */

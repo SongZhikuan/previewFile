@@ -21,6 +21,7 @@
 <script src="js/watermark.js" type="text/javascript"></script>
 <script>
     var dHeight = document.documentElement.clientHeight;
+
     /**
      * 监听滚动 并向上级页面发送事件
      */
@@ -30,6 +31,16 @@
             window.parent.postMessage('ended|' + document.documentElement.scrollTop + '|' + body.offsetHeight, '*');
         }
     }
+    /**
+     * iframe通信
+     */
+    window.addEventListener('message', function (e) {
+        const data = e.data.split('|');
+        console.log('text: ', data);
+        if (data[0] === 'setToolBarNumber') {
+            body.scrollTop = Number(data[2]);
+        }
+    })
     /*初始化水印*/
     window.onload = function() {
         var watermarkTxt = '${watermarkTxt}';
@@ -56,6 +67,13 @@
             url: '${ordinaryUrl}',
             success: function (data) {
                 $("#text").html("<pre>" + data + "</pre>");
+                var arr = location.search.split('setToolBarNumber|');
+                if (arr[1]) {
+                    var t = setTimeout(function () {
+                        clearTimeout(t);
+                        document.documentElement.scrollTop = Number(arr[1] || 0);
+                    }, 100);
+                }
             }
         });
     }
