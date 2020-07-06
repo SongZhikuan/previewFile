@@ -204,10 +204,10 @@
             </resource>
             <resource>
                 <directory>src/main/config</directory>
-                <excludes>
-                    <exclude>${build.exclude.resource}</exclude>
-                </excludes>
-                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>
