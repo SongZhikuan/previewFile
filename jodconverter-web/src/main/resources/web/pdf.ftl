@@ -43,6 +43,7 @@
                     _self.setToolbarPageNumber(Number(arr[1] || 1));
                 }
             }, 1000);
+            _self.addPageListeners();
         }
     }, 100);
     /**
@@ -50,11 +51,17 @@
      */
     document.getElementsByTagName('iframe')[0].onload = function() {
         // console.log("frames onload")
+
+    };
+    /**
+     * toolbar page change
+     */
+    function addPageListeners() {
         var pdfViewerApp = frames[0].PDFViewerApplication;
         var t = setTimeout(function () {
             window.parent.postMessage('pagenumberchanged|' + pdfViewerApp.page + '|' + pdfViewerApp.pagesCount, '*');
             clearTimeout(t);
-        }, 2000);
+        }, 100);
         pdfViewerApp.eventBus._on("pagechanging", function (evt) {
             console.log('pagenumberchanged: ', evt);
             window.parent.postMessage('pagenumberchanged|' + evt.pageNumber + '|' + pdfViewerApp.pagesCount, '*');
@@ -63,7 +70,7 @@
             console.log('firstpage: ', evt);
             // window.parent.postMessage('pagenumberchanged|' + evt.pageNumber + '|' + pdfViewerApp.pagesCount, '*');
         });
-    };
+    }
     /**
      * iframe通信
      */

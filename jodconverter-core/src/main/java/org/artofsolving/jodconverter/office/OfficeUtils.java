@@ -138,7 +138,6 @@ public class OfficeUtils {
         if (userDir == null) {
             userDir = System.getProperty("user.dir");
         }
-        System.out.println(userDir);
         if (userDir.endsWith("bin")) {
             userDir = userDir.substring(0, userDir.length() - 4);
         } else {
